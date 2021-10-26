@@ -18,16 +18,8 @@ function whatIsHappening() {
 
 //whatIsHappening();
 //your products with their price.
-$food = $_GET['food'];
-if($food == '0'){
-    $products = [
-        ['name' => 'Cola', 'price' => 2],
-        ['name' => 'Fanta', 'price' => 2],
-        ['name' => 'Sprite', 'price' => 2],
-        ['name' => 'Ice-tea', 'price' => 3],
-    ];
-   
-}else{
+
+if(empty($_GET) || $_GET['food'] == '1'){
     $products = [
         ['name' => 'Club Ham', 'price' => 3.20],
         ['name' => 'Club Cheese', 'price' => 3],
@@ -35,14 +27,28 @@ if($food == '0'){
         ['name' => 'Club Chicken', 'price' => 4],
         ['name' => 'Club Salmon', 'price' => 5]
     ];
+   
+}else{
+    $products = [
+        ['name' => 'Cola', 'price' => 2],
+        ['name' => 'Fanta', 'price' => 2],
+        ['name' => 'Sprite', 'price' => 2],
+        ['name' => 'Ice-tea', 'price' => 3],
+    ];
+    
 }
-
-
-
-
 
 $email = $street = $streetnumber = $city = $zipcode = '';
 $errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'');
+
+//clean
+function cleanInput($data){
+    $data = htmlspecialchars($data);
+    $data = stripslashes($data);
+    $data = trim($data);
+    return $data;
+}
+
 
 //validation
 if(isset($_GET['submit'])){
@@ -51,11 +57,10 @@ if(isset($_GET['submit'])){
         $errors['email'] = 'Please enter your email! ';
        
     }else {
-        $email = $_GET['email'];
-        //$_SESSION['email'] = $email;
+        $email = cleanInput($_GET['email']);
+        $_SESSION['email'] = $email;
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
             $errors['email'] = 'Email must be a valid email address';
-
         }
         
     }
@@ -64,18 +69,19 @@ if(isset($_GET['submit'])){
     if(empty($_GET['street'])){
         $errors['street'] = 'Please enter your street!';
     }else {
-        $street = $_GET['street'];
-        //$_SESSION['street'] = $street;
+        $street = cleanInput($_GET['street']);
+        $_SESSION['street'] = $street;
         if(!preg_match('/^[a-zA-Z\s]+$/', $street)){
             $errors['street'] = 'Street must be letters and spaces only';
         }
+        
     }
 
     if(empty($_GET['streetnumber'])){
         $errors['streetnumber'] = 'Please enter your streetnumber!';
     }else {
-        $streetnumber = $_GET['streetnumber'];
-        //$_SESSION['streetnumber'] = $streetnumber;
+        $streetnumber =cleanInput($_GET['streetnumber']);
+        $_SESSION['streetnumber'] = $streetnumber;
         if(!is_numeric($streetnumber)){
             $errors['streetnumber'] = 'Streetnumber must be numbers only';
         }
@@ -84,8 +90,8 @@ if(isset($_GET['submit'])){
     if(empty($_GET['city'])){
         $errors['city'] = 'Please enter your city! ';
     }else {
-        $city = $_GET['city'];
-        //$_SESSION['city'] = $city;
+        $city =cleanInput($_GET['city']);
+        $_SESSION['city'] = $city;
         if(!preg_match('/^[a-zA-Z\s]+$/', $city)){
             $errors['city'] = 'City must be letters and spaces only';
         }
@@ -94,14 +100,21 @@ if(isset($_GET['submit'])){
     if(empty($_GET['zipcode'])){
         $errors['zipcode'] = 'Please enter your zipcode!';
     }else {
-        $zipcode = $_GET['zipcode'];
-        //$_SESSION['zipcode'] = $zipcode;
+        $zipcode =cleanInput($_GET['zipcode']);
+        $_SESSION['zipcode'] = $zipcode;
         if(!is_numeric($zipcode)){
             $errors['zipcode'] = 'Zipcode must be numbers only';
         }
     }
+
+    if(array_filter($errors)){
+        echo 'not ok';
+    }else{
+        echo 'form is ok';
+    }
 };
-    
+
+
 
     
 
