@@ -122,11 +122,6 @@ if(isset($_POST['submit'])){
         }
     }
 
-    //validate express-delivery
-    if(!empty($_POST['express_delivery'])){
-        ;
-    }
-
     //validate form
     if(array_filter($errors)){
         echo 'not ok';
@@ -139,8 +134,15 @@ if(isset($_POST['submit'])){
     }
 };
 
-function calculation(){
-
+function calculationOfDelivery(){
+    $deliveryHour = new DateTime();
+    if(isset($_POST['express_delivery'])){
+        $deliveryHour->modify('+45 minute');
+    }else{
+        $deliveryHour->modify('+2 hours');
+    }
+    $deliveryHour = $deliveryHour->format('Y-m-d H:i:s');
+    return $deliveryHour;
 }
 
     
