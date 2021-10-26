@@ -22,7 +22,7 @@
             </li>
         </ul>
     </nav>
-    <form method="get" action="index.php">
+    <form method="post" action="index.php">
         <div class="form-row">
             
             <div class="form-group col-md-4">
@@ -77,6 +77,11 @@
 
         <fieldset>
             <legend>Products</legend>
+            <div class="form-group col-md-4">
+                <div class="alert alert-primary" role="alert">
+                    <?php echo $errors['products']; ?>
+                </div>
+            </div>
             <?php foreach ($products AS $i => $product): ?>
                 <label>
                     <input type="checkbox" value="1" name="products[<?php echo $i ?>]"/> <?php echo $product['name'] ?> -
