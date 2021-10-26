@@ -16,7 +16,7 @@ function whatIsHappening() {
     var_dump($_SESSION);
 }
 
-//whatIsHappening();
+whatIsHappening();
 //your products with their price.
 
 if(empty($_GET) || $_GET['food'] == '1'){
@@ -52,6 +52,7 @@ function cleanInput($data){
 
 //validation
 if(isset($_POST['submit'])){
+    global $email, $street, $streetnumber, $city, $zipcode, $products, $selectedProcucts;
     //validate email
     if(empty($_POST['email'])){
         $errors['email'] = 'Please enter your email! ';
@@ -113,15 +114,26 @@ if(isset($_POST['submit'])){
     if(empty($_POST['products'])){
         $errors['products'] = 'Please select at least one product! ';
     }else{
-
+        foreach($products as $i => $orderedProduct){
+            $selectedProcucts[$products[$i]['name']] = $orderedProduct;
+            $_SESSION['selectedProcucts'] = $selectedProcucts;
+        }
     }
 
+    //validate express-delivery
+    if(!empty($_POST['express_delivery'])){
+        ;
+    }
 
-    //check errors of form
+    //validate form
     if(array_filter($errors)){
         echo 'not ok';
     }else{
         echo 'form is ok';
+    }
+
+    if(isset($_POST['express_delivery'])){
+        
     }
 };
 
