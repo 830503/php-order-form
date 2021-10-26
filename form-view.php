@@ -94,9 +94,11 @@
             Express delivery (+ 5 EUR) 
         </label>
             
+        
         <button type="submit" name="submit" class="btn btn-primary">Order!</button>
+        <button type="submit" name="total" class="btn btn-primary">Total!</button>
     </form>
-
+    
     <footer>You already ordered <strong>&euro; <?php echo $totalValue ?></strong> in food and drinks.</footer>
 </div>
 

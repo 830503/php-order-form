@@ -50,8 +50,8 @@ $email = $street = $streetnumber = $city = $zipcode = '';
 $errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
 
 //validation
-if(isset($_POST['submit'])){
-    global $email, $street, $streetnumber, $city, $zipcode, $products, $selectedProcucts;
+function dataValidation(){
+    global $email, $street, $streetnumber, $city, $zipcode, $errors, $products, $selectedProcucts;
     //validate email
     if(empty($_POST['email'])){
         $errors['email'] = 'Please enter your email! ';
@@ -128,10 +128,13 @@ if(isset($_POST['submit'])){
     }else{
         echo 'form is ok';
     }
+}
 
-    if(isset($_POST['express_delivery'])){
-        
-    }
+if(isset($_POST['submit'])){
+    dataValidation();
+};
+if(isset($_POST['total'])){
+    dataValidation();
 };
 
 function calculationOfDelivery(){
