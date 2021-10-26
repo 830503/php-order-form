@@ -16,7 +16,7 @@ function whatIsHappening() {
     var_dump($_SESSION);
 }
 
-whatIsHappening();
+//whatIsHappening();
 //your products with their price.
 
 if(empty($_GET) || $_GET['food'] == '1'){
@@ -38,9 +38,6 @@ if(empty($_GET) || $_GET['food'] == '1'){
     
 }
 
-$email = $street = $streetnumber = $city = $zipcode = '';
-$errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
-
 //clean
 function cleanInput($data){
     $data = htmlspecialchars($data);
@@ -49,6 +46,8 @@ function cleanInput($data){
     return $data;
 }
 
+$email = $street = $streetnumber = $city = $zipcode = '';
+$errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
 
 //validation
 if(isset($_POST['submit'])){
@@ -56,12 +55,12 @@ if(isset($_POST['submit'])){
     //validate email
     if(empty($_POST['email'])){
         $errors['email'] = 'Please enter your email! ';
-       
     }else {
         $email = cleanInput($_POST['email']);
-        $_SESSION['email'] = $email;
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
             $errors['email'] = 'Email must be a valid email address';
+        }else{
+            $_SESSION['email'] = $email;
         }
         
     }
@@ -71,9 +70,10 @@ if(isset($_POST['submit'])){
         $errors['street'] = 'Please enter your street!';
     }else {
         $street = cleanInput($_POST['street']);
-        $_SESSION['street'] = $street;
         if(!preg_match('/^[a-zA-Z\s]+$/', $street)){
             $errors['street'] = 'Street must be letters and spaces only';
+        }else{
+            $_SESSION['street'] = $street;
         }
     }
 
@@ -82,9 +82,10 @@ if(isset($_POST['submit'])){
         $errors['streetnumber'] = 'Please enter your streetnumber!';
     }else {
         $streetnumber =cleanInput($_POST['streetnumber']);
-        $_SESSION['streetnumber'] = $streetnumber;
         if(!is_numeric($streetnumber)){
             $errors['streetnumber'] = 'Streetnumber must be numbers only';
+        }else{
+            $_SESSION['streetnumber'] = $streetnumber;
         }
     }
     
@@ -93,9 +94,10 @@ if(isset($_POST['submit'])){
         $errors['city'] = 'Please enter your city! ';
     }else {
         $city =cleanInput($_POST['city']);
-        $_SESSION['city'] = $city;
         if(!preg_match('/^[a-zA-Z\s]+$/', $city)){
             $errors['city'] = 'City must be letters and spaces only';
+        }else{
+            $_SESSION['city'] = $city;
         }
     }
 
@@ -137,7 +139,9 @@ if(isset($_POST['submit'])){
     }
 };
 
+function calculation(){
 
+}
 
     
 
