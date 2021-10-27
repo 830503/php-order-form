@@ -20,6 +20,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="?food=0">Order drinks</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?food=2">Order both</a>
+            </li>
         </ul>
     </nav>
     <form method="post">
