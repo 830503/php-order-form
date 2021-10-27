@@ -76,6 +76,7 @@ if(!isset($_SESSION['zipcode'])){
     $_SESSION['zipcode'] = '';
 }
 
+
 //cookie variable
 if(!isset($_COOKIE['cookieTotal'])){
     $_COOKIE['cookieTotal'] = 0;
@@ -84,13 +85,15 @@ if(!isset($_COOKIE['cookieTotal'])){
 }
 
 //variable
+$order = [];
 $email = $street = $streetnumber = $city = $zipcode = '';
 $totalValue = 0;
 $errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
 
 
 //validation
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+//if($_SERVER["REQUEST_METHOD"] == "POST"){
+if(isset($_POST['submit'])){
     //validate email
     if(empty($_POST['email'])){
         $errors['email'] = 'Please enter your email! ';
@@ -162,11 +165,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             for($i = 0; $i < count($products); $i++){
                 if(isset($_POST['products'][$i])){
                     $totalValue += $products[$i]['price'];
+                    array_push($order, $products[$i]['name']);
                     setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
                 }
             }
         }                    
-    }
     
     //check express-delivery
     if(isset($_POST['express_delivery'])){
@@ -175,7 +178,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }else{
         $deliveryHour = date("H:i", strtotime("+2 Hours"));
     }
-
+    
     //validate form
     if(array_filter($errors)){
         echo " <div class='alert alert-dismissible alert-danger'>     
@@ -183,19 +186,44 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <p class='mb-0'> <strong>  Try again! </strong>
         </p> </div>";
     }else{
-       $mailto = "lixiaoqi19830503@gmail.com";
+       $mailto = $_SESSION['email'];
        $subject = "Order from Personal Ham Processors";
-       $message = $street . $streetnumber . $city . $zipcode . $totalValue;
+       $message = implode(", ", $order);
        $header = "From: Personal Ham Processors";
        mail($mailto, $subject, $message, $header);
        if(mail($mailto, $subject, $message, $header)){
         echo " <div class='alert alert-dismissible alert-info'>     
         <h4 class='alert-heading'>Congratulations - Order Recived !</h4> 
-        <p class='mb-0'> Your order has been sent and you will receive it at: <strong> $deliveryHour </strong>
+        <p class='mb-0'> Your order: <strong> $message  </strong><br>
+        Total amount: <strong>&euro; $totalValue </strong> <br>
+        Has been sent to: <strong>$street "." $streetnumber , " . "$city "." $zipcode</strong><br>
+        You will receive at: <strong> $deliveryHour </strong>
         </p> </div>";
        }
     }
+}
 
+if(isset($_POST['total'])){
+    if(empty($_POST['products'])){
+        $errors['products'] = 'Please select at least one product! ';
+    }else{
+        if(isset($_POST['products'])){
+            for($i = 0; $i < count($products); $i++){
+                if(isset($_POST['products'][$i])){
+                    $totalValue += $products[$i]['price'];
+                    //array_push($order, $products[$i]['name']);
+                    setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
+                }
+            }
+        } 
+        if(isset($_POST['express_delivery'])){
+            $totalValue += 5;
+        }
+        echo " <div class='alert alert-dismissible alert-info'>     
+        Total amount: <strong>&euro; $totalValue </strong> <br>
+        </p> </div>";
+    }
+}
 require 'form-view.php';
 
 ?>

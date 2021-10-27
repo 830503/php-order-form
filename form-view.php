@@ -100,11 +100,12 @@
         <button type="submit" name="total" class="btn btn-primary">Total!</button>
     </form>
     
-    <footer>You already ordered: <strong>&euro; <?php echo $totalValue; ?></strong> in food and drinks. </footer>
+    <footer>You already selected: <strong>&euro;<?php echo $totalValue; ?></strong> in food and drinks. </footer>
 </div>
 
 <style>
     footer {
+        padding: 15px;
         text-align: center;
     }
 </style>
