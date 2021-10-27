@@ -16,10 +16,11 @@ function whatIsHappening() {
     var_dump($_SESSION);
 }
 
-//whatIsHappening();
+whatIsHappening();
 //your products with their price.
 
 if(empty($_GET) || $_GET['food'] == '1'){
+    $stateOrder = '1';
     $products = [
         ['name' => 'Club Ham', 'price' => 3.20],
         ['name' => 'Club Cheese', 'price' => 3],
@@ -29,6 +30,7 @@ if(empty($_GET) || $_GET['food'] == '1'){
     ];
    
 }else{
+    $stateOrder = '0';
     $products = [
         ['name' => 'Cola', 'price' => 2],
         ['name' => 'Fanta', 'price' => 2],
@@ -45,6 +47,13 @@ function cleanInput($data){
     $data = trim($data);
     return $data;
 }
+
+//variable
+$email = $street = $streetnumber = $city = $zipcode = '';
+$totalValue = 0;
+$order = array();
+$errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
+
 
 //session variable
 if(!isset($_SESSION['email'])){
@@ -70,11 +79,7 @@ if(!isset($_COOKIE['cookieTotal'])){
     $totalValue = $_COOKIE['cookieTotal'];
 }
 
-//variable
-$email = $street = $streetnumber = $city = $zipcode = '';
-$totalValue = 0;
-$order = array();
-$errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
+
 
 
 //validation
@@ -145,11 +150,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $errors['products'] = 'Please select at least one product! ';
     }else{if(isset($_POST["products"])){
                 foreach($_POST['products'] as $i => $product){
-                    $totalValue += $products[$i]['price'];
+                    $totalValue += $products[$i]['price']  * $_POST['products'][$i];
                     array_push($order, $products[$i]['name']);
-                    setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
+                    
                 }
-                
+                setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
             }
         
     }
