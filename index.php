@@ -46,12 +46,40 @@ function cleanInput($data){
     return $data;
 }
 
+//session variable
+if(!isset($_SESSION['email'])){
+    $_SESSION['email'] = '';
+}
+if(!isset($_SESSION['street'])){
+    $_SESSION['street'] = '';
+}
+if(!isset($_SESSION['streetnumber'])){
+    $_SESSION['streetnumber'] = '';
+}
+if(!isset($_SESSION['city'])){
+    $_SESSION['city'] = '';
+}
+if(!isset($_SESSION['zipcode'])){
+    $_SESSION['zipcode'] = '';
+}
+
+//cookie variable
+if(!isset($_COOKIE['cookieTotal'])){
+    $_COOKIE['cookieTotal'] = 0;
+}else{
+    $totalValue = $_COOKIE['cookieTotal'];
+}
+
+//variable
 $email = $street = $streetnumber = $city = $zipcode = '';
+$totalValue = 0;
+$order = array();
 $errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
 
+
 //validation
-function dataValidation(){
-    global $email, $street, $streetnumber, $city, $zipcode, $errors, $products, $selectedProcucts;
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    //global $email, $street, $streetnumber, $city, $zipcode, $errors, $products, $totalValue;
     //validate email
     if(empty($_POST['email'])){
         $errors['email'] = 'Please enter your email! ';
@@ -62,7 +90,6 @@ function dataValidation(){
         }else{
             $_SESSION['email'] = $email;
         }
-        
     }
 
     //validate street
@@ -106,53 +133,60 @@ function dataValidation(){
         $errors['zipcode'] = 'Please enter your zipcode!';
     }else {
         $zipcode =cleanInput($_POST['zipcode']);
-        $_SESSION['zipcode'] = $zipcode;
         if(!is_numeric($zipcode)){
             $errors['zipcode'] = 'Zipcode must be numbers only';
+        }else{
+            $_SESSION['zipcode'] = $zipcode;
         }
     }
 
     //validate products
     if(empty($_POST['products'])){
         $errors['products'] = 'Please select at least one product! ';
+    }else{if(isset($_POST["products"])){
+                foreach($_POST['products'] as $i => $product){
+                    $totalValue += $products[$i]['price'];
+                    array_push($order, $products[$i]['name']);
+                    setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
+                }
+                
+            }
+        
+    }
+
+    //check express-delivery
+    if(isset($_POST['express_delivery'])){
+        $totalValue += 5;
+        $deliveryHour = date("H:i", strtotime("+45 Minutes"));
     }else{
-        foreach($products as $i => $orderedProduct){
-            $selectedProcucts[$products[$i]['name']] = $orderedProduct;
-            $_SESSION['selectedProcucts'] = $selectedProcucts;
-        }
+        $deliveryHour = date("H:i", strtotime("+2 Hours"));
     }
 
     //validate form
     if(array_filter($errors)){
-        echo 'not ok';
+        echo " <div class='alert alert-dismissible alert-danger'>     
+        <h4 class='alert-heading'>OOOOOOPS! !</h4> 
+        <p class='mb-0'> <strong>  Try again! </strong>
+        </p> </div>";
     }else{
-        echo 'form is ok';
+       $mailto = "lixiaoqi19830503@gmail.com";
+       $subject = "Order from Personal Ham Processors";
+       $message = $street . $streetnumber . $city . $zipcode . $totalValue;
+       $header = "From: Personal Ham Processors";
+       mail($mailto, $subject, $message, $header);
+       if(mail($mailto, $subject, $message, $header)){
+        echo " <div class='alert alert-dismissible alert-info'>     
+        <h4 class='alert-heading'>Congratulations - Order Recived !</h4> 
+        <p class='mb-0'> Your order has been sent and you will receive it at: <strong> $deliveryHour </strong>
+        </p> </div>";
+       }
     }
-}
-
-if(isset($_POST['submit'])){
-    dataValidation();
-};
-if(isset($_POST['total'])){
-    dataValidation();
-};
-
-function calculationOfDelivery(){
-    $deliveryHour = new DateTime();
-    if(isset($_POST['express_delivery'])){
-        $deliveryHour->modify('+45 minute');
-    }else{
-        $deliveryHour->modify('+2 hours');
-    }
-    $deliveryHour = $deliveryHour->format('Y-m-d H:i:s');
-    return $deliveryHour;
-}
 
     
+}
 
-    
 
-$totalValue = 0;
+
 
 require 'form-view.php';
 

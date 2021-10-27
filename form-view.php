@@ -27,7 +27,7 @@
             
             <div class="form-group col-md-4">
                 <label for="email">E-mail:</label>
-                <input type="text" id="email" name="email" class="form-control" value="<?php echo $email ?>"/>
+                <input type="text" id="email" name="email" class="form-control" value="<?php echo $_SESSION['email']; ?>"/>
                 <div class="alert alert-primary">
                     <?php echo $errors['email']; ?>
                 </div>
@@ -40,7 +40,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="street">Street:</label>
-                    <input type="text" name="street" id="street" class="form-control" value="<?php echo $street ?>">
+                    <input type="text" name="street" id="street" class="form-control" value="<?php echo $_SESSION['street']; ?>">
                     <div class="alert alert-primary" role="alert">
                         <?php echo $errors['street']; ?>
                     </div>
@@ -48,7 +48,7 @@
                 
                 <div class="form-group col-md-4">
                     <label for="streetnumber">Street number:</label>
-                    <input type="text" id="streetnumber" name="streetnumber" class="form-control" value="<?php echo $streetnumber ?>">
+                    <input type="text" id="streetnumber" name="streetnumber" class="form-control" value="<?php echo $_SESSION['streetnumber']; ?>">
                     <div class="alert alert-primary" role="alert">
                         <?php echo $errors['streetnumber']; ?>
                     </div>
@@ -58,7 +58,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="city">City:</label>
-                    <input type="text" id="city" name="city" class="form-control" value="<?php echo $city ?>">
+                    <input type="text" id="city" name="city" class="form-control" value="<?php echo $_SESSION['city']; ?>">
                     <div class="alert alert-primary" role="alert">
                         <?php echo $errors['city']; ?>
                     </div>
@@ -66,7 +66,7 @@
                 
                 <div class="form-group col-md-4">
                     <label for="zipcode">Zipcode</label>
-                    <input type="text" id="zipcode" name="zipcode" class="form-control" value="<?php echo $zipcode ?>">
+                    <input type="text" id="zipcode" name="zipcode" class="form-control" value="<?php echo $_SESSION['zipcode']; ?>">
                     <div class="alert alert-primary" role="alert">
                         <?php echo $errors['zipcode']; ?>
                     </div>
@@ -93,13 +93,11 @@
             <input type="checkbox" name="express_delivery" value="5" /> 
             Express delivery (+ 5 EUR) 
         </label>
-            
-        
         <button type="submit" name="submit" class="btn btn-primary">Order!</button>
         <button type="submit" name="total" class="btn btn-primary">Total!</button>
     </form>
     
-    <footer>You already ordered <strong>&euro; <?php echo $totalValue ?></strong> in food and drinks.</footer>
+    <footer>You already ordered: <strong>&euro; <?php echo $totalValue; ?></strong> in food and drinks. </footer>
 </div>
 
 <style>
