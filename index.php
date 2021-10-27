@@ -48,11 +48,6 @@ function cleanInput($data){
     return $data;
 }
 
-//variable
-$email = $street = $streetnumber = $city = $zipcode = '';
-$totalValue = 0;
-$order = array();
-$errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
 
 
 //session variable
@@ -79,6 +74,11 @@ if(!isset($_COOKIE['cookieTotal'])){
     $totalValue = $_COOKIE['cookieTotal'];
 }
 
+//variable
+$email = $street = $streetnumber = $city = $zipcode = '';
+$totalValue = 0;
+$order = array();
+$errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
 
 
 
@@ -152,9 +152,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 foreach($_POST['products'] as $i => $product){
                     $totalValue += $products[$i]['price']  * $_POST['products'][$i];
                     array_push($order, $products[$i]['name']);
-                    
+                    setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
                 }
-                setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
+                
             }
         
     }
