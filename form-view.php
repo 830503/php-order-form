@@ -22,7 +22,7 @@
             </li>
         </ul>
     </nav>
-    <form method="post" action="index.php">
+    <form method="post">
         <div class="form-row">
             
             <div class="form-group col-md-4">

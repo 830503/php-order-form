@@ -16,11 +16,11 @@ function whatIsHappening() {
     var_dump($_SESSION);
 }
 
-whatIsHappening();
+//whatIsHappening();
 //your products with their price.
 
 if(empty($_GET) || $_GET['food'] == '1'){
-    $stateOrder = '1';
+
     $products = [
         ['name' => 'Club Ham', 'price' => 3.20],
         ['name' => 'Club Cheese', 'price' => 3],
@@ -28,17 +28,16 @@ if(empty($_GET) || $_GET['food'] == '1'){
         ['name' => 'Club Chicken', 'price' => 4],
         ['name' => 'Club Salmon', 'price' => 5]
     ];
-   
 }else{
-    $stateOrder = '0';
     $products = [
         ['name' => 'Cola', 'price' => 2],
         ['name' => 'Fanta', 'price' => 2],
         ['name' => 'Sprite', 'price' => 2],
         ['name' => 'Ice-tea', 'price' => 3],
     ];
-    
 }
+
+
 
 //clean
 function cleanInput($data){
@@ -47,8 +46,6 @@ function cleanInput($data){
     $data = trim($data);
     return $data;
 }
-
-
 
 //session variable
 if(!isset($_SESSION['email'])){
@@ -81,10 +78,9 @@ $order = array();
 $errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
 
 
-
 //validation
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    //global $email, $street, $streetnumber, $city, $zipcode, $errors, $products, $totalValue;
+    global $email, $street, $streetnumber, $city, $zipcode, $errors, $products, $totalValue;
     //validate email
     if(empty($_POST['email'])){
         $errors['email'] = 'Please enter your email! ';
@@ -148,17 +144,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     //validate products
     if(empty($_POST['products'])){
         $errors['products'] = 'Please select at least one product! ';
-    }else{if(isset($_POST["products"])){
-                foreach($_POST['products'] as $i => $product){
-                    $totalValue += $products[$i]['price']  * $_POST['products'][$i];
-                    array_push($order, $products[$i]['name']);
-                    setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
+    }else{
+        if(isset($_POST['products'])){
+            for($i = 0; $i < count($products); $i++){
+                if(isset($_POST['products'][$i])){
+                    $totalValue += $products[$i]['price'];
                 }
-                
             }
-        
+        }                    
     }
-
+    
     //check express-delivery
     if(isset($_POST['express_delivery'])){
         $totalValue += 5;
@@ -186,8 +181,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         </p> </div>";
        }
     }
-
-    
 }
 
 
