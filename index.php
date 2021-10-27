@@ -74,13 +74,11 @@ if(!isset($_COOKIE['cookieTotal'])){
 //variable
 $email = $street = $streetnumber = $city = $zipcode = '';
 $totalValue = 0;
-$order = array();
 $errors = array('email'=>'', 'street'=>'', 'streetnumber'=>'', 'city'=>'', 'zipcode'=>'', 'products'=>'');
 
 
 //validation
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    global $email, $street, $streetnumber, $city, $zipcode, $errors, $products, $totalValue;
     //validate email
     if(empty($_POST['email'])){
         $errors['email'] = 'Please enter your email! ';
@@ -146,9 +144,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $errors['products'] = 'Please select at least one product! ';
     }else{
         if(isset($_POST['products'])){
+            /*foreach($_POST['products'] as $i => $product){
+                $totalValue += $products[$i]['price']  * $_POST['products'][$i];*/
+            }
             for($i = 0; $i < count($products); $i++){
                 if(isset($_POST['products'][$i])){
                     $totalValue += $products[$i]['price'];
+                    setcookie("cookieTotal", strval($totalValue), time() + (86400 * 30), "/");
                 }
             }
         }                    
@@ -181,10 +183,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         </p> </div>";
        }
     }
-}
-
-
-
 
 require 'form-view.php';
 
